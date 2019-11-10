@@ -19,7 +19,11 @@ class TableAdapter(context: Context) : AbstractTableAdapter<String, String, Int>
     }
 
     fun updateCell(item: TableEntity) {
-        changeCellItem(mColumnHeaderItems.indexOf(item.columnTitle), mRowHeaderItems.indexOf(item.rowTitle), item.value)
+        val rowIndex = mRowHeaderItems?.indexOf(item.rowTitle) ?: UNDEFENDED_VALUE
+        val columnIndex = mColumnHeaderItems?.indexOf(item.columnTitle) ?: UNDEFENDED_VALUE
+        if (rowIndex != UNDEFENDED_VALUE && columnIndex != UNDEFENDED_VALUE) {
+            changeCellItem(columnIndex, rowIndex, item.value)
+        }
     }
 
     fun clearCells() {
@@ -99,5 +103,9 @@ class TableAdapter(context: Context) : AbstractTableAdapter<String, String, Int>
 
     class RowHeaderViewHolder(itemView: View) : AbstractViewHolder(itemView) {
         val rowTextView: TextView = itemView.findViewById(R.id.header_row_text)
+    }
+
+    companion object {
+        private const val UNDEFENDED_VALUE = -1
     }
 }

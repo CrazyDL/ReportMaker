@@ -6,7 +6,8 @@
 
     <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:layout_centerInParent="true">
 
         <TextView
             android:id="@+id/header_column_text"
@@ -14,10 +15,11 @@
             android:layout_height="match_parent"
             android:ellipsize="end"
             android:gravity="center_vertical"
-            android:textAlignment="center"
             android:lines="1"
             android:maxLines="1"
             android:padding="8dp"
+            android:minWidth="@dimen/cell_height"
+            android:textAlignment="center"
             android:textColor="@color/titlesColor"
             android:textSize="@dimen/text_size_in_table"
             tools:text="text" />

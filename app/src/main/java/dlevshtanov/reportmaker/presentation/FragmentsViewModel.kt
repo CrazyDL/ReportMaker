@@ -28,19 +28,27 @@ class FragmentsViewModel : ViewModel() {
         }
     }
 
-    fun initItems(titles: List<TitleEntity>, items: List<TableEntity>) {
+    fun initItems(titles: List<TitleEntity>, items: List<TableEntity>, needUpdateTitles: Boolean) {
         if (titles.isNotEmpty()) {
             val rowTitles = titles.filter { it.type == Pages.ROW }
             val columnTitles = titles.filter { it.type == Pages.COLUMN }
-            initRowsLiveData.value = rowTitles
-            initColumnsLiveData.value = columnTitles
+            if (needUpdateTitles) {
+                initRowsLiveData.value = rowTitles
+                initColumnsLiveData.value = columnTitles
+            }
+            if (rowTitles.isEmpty() || columnTitles.isEmpty()) {
+                initTableLiveData.value = Triple(emptyList(), emptyList(), emptyList())
+                return
+            }
             val rowStrings = rowTitles.map { it.title }
             val columnStrings = columnTitles.map { it.title }
             val cells = MutableList(rowTitles.size) { MutableList(columnTitles.size) { 0 } }
             items.forEach { item ->
                 val rowInd = rowStrings.indexOf(item.rowTitle)
                 val columnInd = columnStrings.indexOf(item.columnTitle)
-                cells[rowInd][columnInd] = item.value
+                if (rowInd != -1 && columnInd != -1) {
+                    cells[rowInd][columnInd] = item.value
+                }
             }
             initTableLiveData.value = Triple(columnStrings, rowStrings, cells)
         }

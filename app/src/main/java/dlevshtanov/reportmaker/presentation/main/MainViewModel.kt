@@ -10,11 +10,12 @@ import dlevshtanov.reportmaker.models.Pages
 import dlevshtanov.reportmaker.models.TableEntity
 import dlevshtanov.reportmaker.models.TitleEntity
 import dlevshtanov.reportmaker.presentation.FragmentsViewModel
-import io.reactivex.Completable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.functions.BiFunction
 import io.reactivex.schedulers.Schedulers
+import io.reactivex.subjects.PublishSubject
+import java.util.concurrent.TimeUnit
 
 class MainViewModel(
     private val fragmentsViewModel: FragmentsViewModel,
@@ -26,22 +27,17 @@ class MainViewModel(
     val showAddTitleDialogLiveData = MutableLiveData<String>()
     val cellValueLiveData = MutableLiveData(1)
     val currentPageLiveData = MutableLiveData<Pages>()
+    val alreadyExistsAlertLiveData = MutableLiveData<Pages>()
     private val compositeDisposable = CompositeDisposable()
+    private val updateTableSubject = PublishSubject.create<List<TitleEntity>>()
 
     private var currentPage = Pages.ROW
     private var currentItem: TitleEntity? = null
 
     fun initViewModel(page: Pages) {
         currentPage = page
-        compositeDisposable.add(
-            mainInteractor.getTitles()
-                .zipWith(
-                    mainInteractor.getTable(),
-                    BiFunction { titles: List<TitleEntity>, table: List<TableEntity> -> Pair(titles, table) })
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({ items -> fragmentsViewModel.initItems(items.first, items.second) }, {})
-        )
+        initItems(true)
+        registerInitSubject()
     }
 
     fun onDecreaseClick() {
@@ -63,7 +59,7 @@ class MainViewModel(
             mainInteractor.clearTableData()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({ fragmentsViewModel.clearTable() }, {})
+                .subscribe({ fragmentsViewModel.clearTable() }, { ex -> Log.e(TAG, ex.message, ex) })
         )
     }
 
@@ -73,7 +69,7 @@ class MainViewModel(
             mainInteractor.clearAllData()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({ fragmentsViewModel.clearAll() }, {})
+                .subscribe({ fragmentsViewModel.clearAll() }, { ex -> Log.e(TAG, ex.message, ex) })
         )
     }
 
@@ -90,8 +86,8 @@ class MainViewModel(
     }
 
     fun onTitleAdded(title: String) {
-        if (title.isNotEmpty()) {
-            val item = TitleEntity(type = currentPage, title = title)
+        if (title.trim().isNotEmpty()) {
+            val item = TitleEntity(type = currentPage, title = title.trim())
             compositeDisposable.add(
                 mainInteractor.addTitle(item)
                     .subscribeOn(Schedulers.io())
@@ -99,8 +95,10 @@ class MainViewModel(
                     .subscribe({ id ->
                         if (id != -1L) {
                             fragmentsViewModel.addItem(item)
+                        } else {
+                            alreadyExistsAlertLiveData.value = currentPage
                         }
-                    }, {})
+                    }, { ex -> Log.e(TAG, ex.message, ex) })
             )
 
         }
@@ -124,26 +122,66 @@ class MainViewModel(
                     .subscribe({
                         onCellAdded(it)
                     }, { ex ->
-                        Log.e("MainViewModel", ex.message, ex)
+                        Log.e(TAG, ex.message, ex)
                     }, {
                         onCellAdded(cell)
-                        mainInteractor.addToTableValue(cell).subscribe({}, {})
+                        mainInteractor.addToTableValue(cell)
+                            .subscribeOn(Schedulers.io())
+                            .subscribe({}, { ex -> Log.e(TAG, ex.message, ex) })
                     })
             )
         }
     }
 
     fun deleteItem(item: TitleEntity) {
-        mainInteractor.deleteTitle(item).execute()
+        compositeDisposable.add(
+            mainInteractor.deleteTitle(item)
+                .andThen(mainInteractor.deleteFromTable(item))
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe({ updateTableSubject.onNext(emptyList()) }, { ex -> Log.e(TAG, ex.message, ex) })
+        )
     }
 
     fun updateItems(items: List<TitleEntity>) {
-        mainInteractor.updateTitles(items).execute()
+        updateTableSubject.onNext(items)
     }
 
     fun onFabClicked(context: Context) {
         showAddTitleDialogLiveData.value = context.getString(
             if (currentPage == Pages.ROW) R.string.add_row_dialog_title else R.string.add_column_dialog_title
+        )
+    }
+
+    private fun registerInitSubject() {
+        compositeDisposable.add(
+            updateTableSubject
+                .throttleLatest(1000, TimeUnit.MILLISECONDS)
+                .subscribeOn(Schedulers.io())
+                .observeOn(Schedulers.io())
+                .subscribe(
+                    {
+                        if (it.isEmpty()) {
+                            initItems(false)
+                        } else {
+                            mainInteractor.updateTitles(it).subscribe({ initItems(false) }, {})
+                        }
+                    },
+                    { ex -> Log.e(TAG, ex.message, ex) })
+        )
+    }
+
+    private fun initItems(needUpdateTitles: Boolean) {
+        compositeDisposable.add(
+            mainInteractor.getTitles()
+                .zipWith(
+                    mainInteractor.getTable(),
+                    BiFunction { titles: List<TitleEntity>, table: List<TableEntity> -> Pair(titles, table) })
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(
+                    { items -> fragmentsViewModel.initItems(items.first, items.second, needUpdateTitles) },
+                    { ex -> Log.e(TAG, ex.message, ex) })
         )
     }
 
@@ -158,7 +196,7 @@ class MainViewModel(
         compositeDisposable.dispose()
     }
 
-    private fun Completable.execute() {
-        compositeDisposable.add(this.subscribeOn(Schedulers.io()).subscribe({}, {}))
+    companion object {
+        private const val TAG = "MainViewModel"
     }
 }

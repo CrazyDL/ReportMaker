@@ -2,6 +2,7 @@ package dlevshtanov.reportmaker.domain
 
 import dlevshtanov.reportmaker.data.db.TableDao
 import dlevshtanov.reportmaker.data.db.TitlesDao
+import dlevshtanov.reportmaker.models.Pages
 import dlevshtanov.reportmaker.models.TableEntity
 import dlevshtanov.reportmaker.models.TitleEntity
 import io.reactivex.Completable
@@ -20,7 +21,15 @@ class MainInteractor(
 
     fun deleteTitle(item: TitleEntity) = titlesDao.delete(item)
 
-    fun updateTitles(items: List<TitleEntity>) = titlesDao.updateAll(items)
+    fun updateTitles(items: List<TitleEntity>) = titlesDao.insertAll(items)
+
+    fun deleteFromTable(item: TitleEntity): Completable {
+        return if (item.type == Pages.ROW) {
+            tableDao.deleteRow(item.title)
+        } else {
+            tableDao.deleteColumn(item.title)
+        }
+    }
 
     fun clearTableData(): Completable {
         return tableDao.clearAll()
@@ -35,7 +44,7 @@ class MainInteractor(
         return tableDao.getTableValue(item.rowTitle, item.columnTitle)
             .map { oldItem ->
                 oldItem.value += item.value
-                tableDao.updateAll(oldItem)
+                tableDao.updateAll(oldItem).blockingGet()
                 oldItem
             }
     }

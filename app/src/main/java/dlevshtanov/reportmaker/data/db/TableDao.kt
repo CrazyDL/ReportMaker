@@ -16,13 +16,19 @@ interface TableDao {
     fun getTableValue(rowTitle: String, columnTitle: String): Maybe<TableEntity>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertAll(vararg rows: TableEntity): Completable
+    fun insertAll(vararg cells: TableEntity): Completable
 
     @Update
-    fun updateAll(vararg rows: TableEntity): Completable
+    fun updateAll(vararg cells: TableEntity): Completable
+
+    @Query("DELETE FROM TableEntity WHERE row_title =:rowTitle")
+    fun deleteRow(rowTitle: String): Completable
+
+    @Query("DELETE FROM TableEntity WHERE column_title =:columnTitle")
+    fun deleteColumn(columnTitle: String): Completable
 
     @Delete
-    fun delete(row: TableEntity): Completable
+    fun delete(cell: TableEntity): Completable
 
     @Query("DELETE FROM TableEntity")
     fun clearAll(): Completable

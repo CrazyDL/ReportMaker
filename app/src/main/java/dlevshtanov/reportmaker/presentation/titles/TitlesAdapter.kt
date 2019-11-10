@@ -30,6 +30,7 @@ class TitlesAdapter(private val titlesCallback: TitlesCallback) : RecyclerView.A
         val deletedItem = items[position]
         items.removeAt(position)
         notifyItemRemoved(position)
+        items.forEachIndexed { i, item -> item.orderId = i }
         titlesCallback.onItemDeleted(deletedItem)
     }
 
@@ -45,7 +46,7 @@ class TitlesAdapter(private val titlesCallback: TitlesCallback) : RecyclerView.A
         item.orderId = items.size
         items.add(item)
         notifyItemInserted(items.size)
-        titlesCallback.onItemsChanged(listOf(item))
+        titlesCallback.onItemsChanged(items)
     }
 
     fun setItems(newItems: List<TitleEntity>) {

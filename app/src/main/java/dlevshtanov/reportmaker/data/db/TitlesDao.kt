@@ -13,12 +13,15 @@ interface TitlesDao {
     fun getAll(): Single<List<TitleEntity>>
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
+    fun insert(title: TitleEntity): Maybe<Long>
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertAll(vararg titles: TitleEntity): Completable
 
-    @Insert(onConflict = OnConflictStrategy.IGNORE)
-    fun insert( title: TitleEntity): Maybe<Long>
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    fun insertAll(titles: List<TitleEntity>): Completable
 
-    @Update
+    @Update(onConflict = OnConflictStrategy.REPLACE)
     fun updateAll(titles: List<TitleEntity>): Completable
 
     @Delete

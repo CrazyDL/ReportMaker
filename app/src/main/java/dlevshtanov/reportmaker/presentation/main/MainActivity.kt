@@ -134,6 +134,9 @@ class MainActivity : AppCompatActivity(), TitlesCallback {
         mainViewModel.currentPageLiveData.observe(this, Observer<Pages> { page ->
             viewPager.currentItem = page.position
         })
+        mainViewModel.alreadyExistsAlertLiveData.observe(this, Observer<Pages> { page ->
+            showAlreadyExistDialog(if (page == Pages.ROW) R.string.row_exist_dialog_title else R.string.column_exist_dialog_title)
+        })
         mainViewModel.initViewModel(Pages.getPageByPosition(viewPager.currentItem))
     }
 
@@ -144,7 +147,7 @@ class MainActivity : AppCompatActivity(), TitlesCallback {
         val alertDialog = AlertDialog.Builder(this)
             .setView(dialogView)
             .setTitle(title)
-            .setPositiveButton(getString(R.string.add_dialog_ok)) { _, _ ->
+            .setPositiveButton(getString(R.string.dialog_add)) { _, _ ->
                 mainViewModel.onTitleAdded(titleEditText.text.toString())
             }
             .setNegativeButton(getString(R.string.dialog_cancel)) { _, _ -> }
@@ -156,7 +159,7 @@ class MainActivity : AppCompatActivity(), TitlesCallback {
     private fun showClearTableDataDialog() {
         AlertDialog.Builder(this)
             .setTitle(R.string.clear_table_data_dialog_title)
-            .setPositiveButton(getString(R.string.clear_dialog_ok)) { _, _ ->
+            .setPositiveButton(getString(R.string.dialog_ok)) { _, _ ->
                 mainViewModel.onClearTableDataClicked()
             }
             .setNegativeButton(getString(R.string.dialog_cancel)) { _, _ -> }
@@ -167,10 +170,18 @@ class MainActivity : AppCompatActivity(), TitlesCallback {
     private fun showClearAllDataDialog() {
         AlertDialog.Builder(this)
             .setTitle(R.string.clear_all_data_dialog_title)
-            .setPositiveButton(getString(R.string.clear_dialog_ok)) { _, _ ->
+            .setPositiveButton(getString(R.string.dialog_ok)) { _, _ ->
                 mainViewModel.onClearAllDataClicked()
             }
             .setNegativeButton(getString(R.string.dialog_cancel)) { _, _ -> }
+            .create()
+            .show()
+    }
+
+    private fun showAlreadyExistDialog(title: Int) {
+        AlertDialog.Builder(this)
+            .setTitle(title)
+            .setPositiveButton(getString(R.string.dialog_ok)) { _, _ -> }
             .create()
             .show()
     }
