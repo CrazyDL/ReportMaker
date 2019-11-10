@@ -1,0 +1,16 @@
+<resources>
+    <string name="app_name">Report Maker</string>
+    <string name="row">Строки</string>
+    <string name="column">Столбцы</string>
+    <string name="table">Таблица</string>
+    <string name="history">История</string>
+    <string name="clear_table_data">Очистить таблицу</string>
+    <string name="clear_all_data">Очистить все данные</string>
+    <string name="clear_table_data_dialog_title">Удалить все данные из таблицы и истории?</string>
+    <string name="clear_all_data_dialog_title">Удалить все данные?</string>
+    <string name="add_row_dialog_title">Введите название строки</string>
+    <string name="add_column_dialog_title">Введите название столбца</string>
+    <string name="add_dialog_ok">Добавить</string>
+    <string name="clear_dialog_ok">Ок</string>
+    <string name="dialog_cancel">Отмена</string>
+</resources>
