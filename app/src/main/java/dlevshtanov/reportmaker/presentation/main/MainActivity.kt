@@ -19,6 +19,7 @@ import dlevshtanov.reportmaker.R
 import dlevshtanov.reportmaker.models.Pages
 import dlevshtanov.reportmaker.models.TitleEntity
 import dlevshtanov.reportmaker.presentation.FragmentsViewModel
+import dlevshtanov.reportmaker.presentation.history.HistoryActivity
 import dlevshtanov.reportmaker.presentation.titles.TitlesCallback
 
 
@@ -51,6 +52,7 @@ class MainActivity : AppCompatActivity(), TitlesCallback {
         return when (item?.itemId) {
             R.id.history_option -> {
                 mainViewModel.onShowHistoryClicked()
+                openHistory()
                 true
             }
             R.id.clear_table_data_option -> {
@@ -184,5 +186,9 @@ class MainActivity : AppCompatActivity(), TitlesCallback {
             .setPositiveButton(getString(R.string.dialog_ok)) { _, _ -> }
             .create()
             .show()
+    }
+
+    private fun openHistory() {
+        startActivity(HistoryActivity.getIntent(this))
     }
 }

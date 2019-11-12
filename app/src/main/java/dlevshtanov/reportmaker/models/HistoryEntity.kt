@@ -2,10 +2,13 @@ package dlevshtanov.reportmaker.models
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity
+import androidx.room.PrimaryKey
 
-@Entity(primaryKeys = ["row_title", "column_title"])
-data class TableEntity(
+@Entity
+data class HistoryEntity(
+    @PrimaryKey var date: Long,
     @ColumnInfo(name = "row_title") var rowTitle: String,
     @ColumnInfo(name = "column_title") var columnTitle: String,
-    @ColumnInfo(name = "value") var value: Int
+    @ColumnInfo(name = "changed_value") var changedValue: Int,
+    @ColumnInfo(name = "was_value") var wasValue: Int
 )

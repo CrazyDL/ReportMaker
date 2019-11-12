@@ -15,8 +15,8 @@ class DependenciesProvider : Application() {
             applicationContext,
             AppDatabase::class.java,
             AppDatabase.DATABASE_NAME
-        ).build()
-        mainInteractor = MainInteractor(appDatabase.titlesDao(), appDatabase.tableDao())
+        ).fallbackToDestructiveMigration().build()
+        mainInteractor = MainInteractor(appDatabase.titlesDao(), appDatabase.tableDao(), appDatabase.historyDao())
     }
 
     companion object {

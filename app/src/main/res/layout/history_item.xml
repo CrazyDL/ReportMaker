@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="?selectableItemBackground">
+
+    <TextView
+        android:id="@+id/row_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:text="@string/row"
+        android:textColor="@color/secondaryTitlesColor"
+        android:textSize="14sp"
+        app:layout_constraintBottom_toBottomOf="@id/row_text_view"
+        app:layout_constraintTop_toTopOf="@id/row_text_view"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <TextView
+        android:id="@+id/row_text_view"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="4dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:ellipsize="marquee"
+        android:singleLine="true"
+        android:textColor="@color/titlesColor"
+        android:textSize="18sp"
+        app:layout_constraintEnd_toStartOf="@id/changed_text_view"
+        app:layout_constraintHorizontal_bias="0"
+        app:layout_constraintStart_toEndOf="@id/row_title"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="Row" />
+
+    <TextView
+        android:id="@+id/column_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:text="@string/column"
+        android:textColor="@color/secondaryTitlesColor"
+        android:textSize="14sp"
+        app:layout_constraintBottom_toBottomOf="@id/column_text_view"
+        app:layout_constraintTop_toTopOf="@id/column_text_view"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <TextView
+        android:id="@+id/column_text_view"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="4dp"
+        android:layout_marginTop="2dp"
+        android:layout_marginEnd="8dp"
+        android:ellipsize="marquee"
+        android:singleLine="true"
+        android:textColor="@color/titlesColor"
+        android:textSize="18sp"
+        app:layout_constraintEnd_toStartOf="@id/changed_text_view"
+        app:layout_constraintHorizontal_bias="0"
+        app:layout_constraintStart_toEndOf="@id/column_title"
+        app:layout_constraintTop_toBottomOf="@id/row_text_view"
+        tools:text="Column" />
+
+
+    <TextView
+        android:id="@+id/date_text_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="4dp"
+        android:layout_marginBottom="8dp"
+        android:textColor="@color/titlesColor"
+        android:textSize="12sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/column_text_view"
+        app:layout_constraintBottom_toTopOf="@id/divider"
+        tools:text="10.10.2019 15:36" />
+
+    <TextView
+        android:id="@+id/changed_text_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="4dp"
+        android:textColor="@color/titlesColor"
+        android:textSize="32sp"
+        app:layout_constraintBottom_toTopOf="@id/was_text_view"
+        app:layout_constraintEnd_toEndOf="parent"
+        tools:text="+2" />
+
+    <TextView
+        android:id="@+id/was_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="4dp"
+        android:text="@string/was"
+        android:textColor="@color/secondaryTitlesColor"
+        android:textSize="14sp"
+        app:layout_constraintBottom_toBottomOf="@id/was_text_view"
+        app:layout_constraintEnd_toStartOf="@id/was_text_view" />
+
+    <TextView
+        android:id="@+id/was_text_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:textColor="@color/titlesColor"
+        android:textSize="14sp"
+        app:layout_constraintBottom_toBottomOf="@id/date_text_view"
+        app:layout_constraintEnd_toEndOf="@id/changed_text_view"
+        tools:text="12" />
+
+
+    <View
+        android:id="@+id/divider"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_gravity="bottom"
+        android:background="@color/cellLineColor"
+        app:layout_constraintBottom_toBottomOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

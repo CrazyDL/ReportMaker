@@ -111,10 +111,10 @@ class MainViewModel(
             toolbarTitleLiveData.value = "$titleBegin (${item.title})"
             currentItem = item
             currentPageLiveData.value = if (currentPage == Pages.ROW) Pages.COLUMN else Pages.ROW
-        } else {
+        } else if (cellValueLiveData.value != null && cellValueLiveData.value != 0) {
             val rowTitle = if (item.type == Pages.ROW) item.title else currentItem?.title.orEmpty()
             val columnTitle = if (item.type == Pages.COLUMN) item.title else currentItem?.title.orEmpty()
-            val cell = TableEntity(0, rowTitle, columnTitle, cellValueLiveData.value ?: 0)
+            val cell = TableEntity(rowTitle, columnTitle, cellValueLiveData.value ?: 0)
             compositeDisposable.add(
                 mainInteractor.updateTableValue(cell)
                     .subscribeOn(Schedulers.io())

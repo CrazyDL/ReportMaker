@@ -29,8 +29,8 @@ class MainPagerAdapter(
 
     fun getPageTitle(position: Int): CharSequence {
         return when (position) {
-            Pages.ROW.position -> context.getString(R.string.row)
-            Pages.COLUMN.position -> context.getString(R.string.column)
+            Pages.ROW.position -> context.getString(R.string.rows)
+            Pages.COLUMN.position -> context.getString(R.string.columns)
             Pages.TABLE.position -> context.getString(R.string.table)
             else -> throw IllegalStateException("Wrong pager position")
         }

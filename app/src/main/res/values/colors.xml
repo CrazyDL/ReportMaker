@@ -8,6 +8,7 @@
     <color name="secondaryDarkColor">#c60055</color>
     <color name="colorWhite">#fff</color>
     <color name="titlesColor">#3C3C3C</color>
+    <color name="secondaryTitlesColor">#868686</color>
     <color name="colorGray">#F2F2F3</color>
 
     <color name="selectedBackgroundColor">#e0f7fa</color>

@@ -18,6 +18,9 @@ interface TableDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertAll(vararg cells: TableEntity): Completable
 
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    fun insertIfNotExist(cells: TableEntity): Completable
+
     @Update
     fun updateAll(vararg cells: TableEntity): Completable
 
