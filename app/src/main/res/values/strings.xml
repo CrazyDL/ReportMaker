@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Report Maker</string>
+    <string name="app_name">Счётчик статистики</string>
     <string name="name">Название</string>
     <string name="row">Строка:</string>
     <string name="rows">Строки</string>
