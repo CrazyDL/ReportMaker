@@ -1,5 +1,6 @@
 <resources>
     <string name="app_name">Report Maker</string>
+    <string name="name">Название</string>
     <string name="row">Строка:</string>
     <string name="rows">Строки</string>
     <string name="column">Столбец:</string>
@@ -10,10 +11,17 @@
     <string name="clear_all_data">Очистить все данные</string>
     <string name="clear_table_data_dialog_title">Удалить все данные из истории и обнулить таблицу?</string>
     <string name="clear_all_data_dialog_title">Удалить все данные?</string>
-    <string name="add_row_dialog_title">Введите название строки</string>
-    <string name="add_column_dialog_title">Введите название столбца</string>
+    <string name="add_row_dialog_title">Добавить строку</string>
+    <string name="add_column_dialog_title">Добавить столбец</string>
     <string name="row_exist_dialog_title">Такая строка уже существует</string>
     <string name="column_exist_dialog_title">Такой столбец уже существует</string>
+    <string name="history_options_title">Сбросить изменения, произведенные после %1$s (включительно):</string>
+    <string name="reset_cell_value">Только в выбранной клетке</string>
+    <string name="reset_cell_dialog_title">Сбросить значение выбранной клетки?</string>
+    <string name="reset_cell_dialog_description">Так же будет удалена история изменений, связанная с клеткой</string>
+    <string name="reset_after_date">Во всей таблице</string>
+    <string name="reset_after_date_dialog_title">Сбросить все изменения после выбранного времени?</string>
+    <string name="reset_after_date_dialog_description">Так же будет удалена история изменений</string>
     <string name="dialog_add">Добавить</string>
     <string name="dialog_ok">Ок</string>
     <string name="dialog_cancel">Отмена</string>

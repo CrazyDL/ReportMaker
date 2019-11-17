@@ -40,6 +40,10 @@ class MainViewModel(
         registerInitSubject()
     }
 
+    fun updateTable() {
+        initItems(false)
+    }
+
     fun onDecreaseClick() {
         cellValueLiveData.value = cellValueLiveData.value?.minus(1)
     }

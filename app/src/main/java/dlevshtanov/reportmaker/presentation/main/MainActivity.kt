@@ -1,10 +1,10 @@
 package dlevshtanov.reportmaker.presentation.main
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import android.view.WindowManager
-import android.widget.EditText
 import android.widget.ImageButton
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
@@ -15,6 +15,7 @@ import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
+import com.google.android.material.textfield.TextInputEditText
 import dlevshtanov.reportmaker.R
 import dlevshtanov.reportmaker.models.Pages
 import dlevshtanov.reportmaker.models.TitleEntity
@@ -37,7 +38,7 @@ class MainActivity : AppCompatActivity(), TitlesCallback {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        setContentView(R.layout.main_activity)
         initViews()
         initListeners()
         init()
@@ -65,6 +66,13 @@ class MainActivity : AppCompatActivity(), TitlesCallback {
             }
             else -> super.onOptionsItemSelected(item)
 
+        }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == REQUEST_CODE_FOR_HISTORY_ACTIVITY) {
+            mainViewModel.updateTable()
         }
     }
 
@@ -144,7 +152,7 @@ class MainActivity : AppCompatActivity(), TitlesCallback {
 
     private fun showAddTitleDialog(title: String) {
         val dialogView = layoutInflater.inflate(R.layout.add_title_dialog, null)
-        val titleEditText: EditText = dialogView.findViewById(R.id.title_edit_text)
+        val titleEditText: TextInputEditText = dialogView.findViewById(R.id.title_edit_text)
         titleEditText.requestFocus()
         val alertDialog = AlertDialog.Builder(this)
             .setView(dialogView)
@@ -189,6 +197,10 @@ class MainActivity : AppCompatActivity(), TitlesCallback {
     }
 
     private fun openHistory() {
-        startActivity(HistoryActivity.getIntent(this))
+        startActivityForResult(HistoryActivity.getIntent(this), REQUEST_CODE_FOR_HISTORY_ACTIVITY)
+    }
+
+    companion object {
+        const val REQUEST_CODE_FOR_HISTORY_ACTIVITY = 101
     }
 }

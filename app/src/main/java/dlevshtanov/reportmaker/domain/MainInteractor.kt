@@ -60,7 +60,14 @@ class MainInteractor(
     fun resetAfterDate(item: HistoryEntity): Completable {
         return historyDao.deleteAfterDate(item.date)
             .andThen(tableDao.clearAll())
-            .andThen { fillTableFromHistory() }
+            .andThen(historyDao.getAllReversed())
+            .flatMapCompletable { history ->
+                history.forEach {
+                    tableDao.insertIfNotExist(TableEntity(it.rowTitle, it.columnTitle, it.wasValue + it.changedValue))
+                        .blockingAwait()
+                }
+                Completable.complete()
+            }
     }
 
     fun updateTableValue(item: TableEntity): Maybe<TableEntity> {
@@ -79,15 +86,5 @@ class MainInteractor(
         val history = HistoryEntity(Calendar.getInstance().timeInMillis, item.rowTitle, item.columnTitle, item.value, 0)
         return tableDao.insertAll(item)
             .andThen(historyDao.insertAll(history))
-    }
-
-    private fun fillTableFromHistory(): Completable {
-        return historyDao.getAllReversed().flatMapCompletable { history ->
-            Completable.fromAction {
-                history.forEach {
-                    tableDao.insertIfNotExist(TableEntity(it.rowTitle, it.columnTitle, it.wasValue))
-                }
-            }
-        }
     }
 }

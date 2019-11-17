@@ -14,15 +14,38 @@ class HistoryViewModel(
 ) : ViewModel() {
 
     val initHistoryLiveData = MutableLiveData<List<HistoryEntity>>()
+    var currentItem: HistoryEntity? = null
     private val compositeDisposable = CompositeDisposable()
 
     fun initItems() {
-        compositeDisposable.addAll(
+        compositeDisposable.add(
             mainInteractor.getHistory()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({ initHistoryLiveData.value = it }, { ex -> Log.e(TAG, ex.message, ex) })
         )
+    }
+
+    fun onResetCellClicked() {
+        currentItem?.let {
+            compositeDisposable.add(
+                mainInteractor.resetCell(it)
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe({ initItems() }, { ex -> Log.e(TAG, ex.message, ex) })
+            )
+        }
+    }
+
+    fun onResetAfterDateClicked() {
+        currentItem?.let {
+            compositeDisposable.add(
+                mainInteractor.resetAfterDate(it)
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe({ initItems() }, { ex -> Log.e(TAG, ex.message, ex) })
+            )
+        }
     }
 
     override fun onCleared() {

@@ -6,4 +6,7 @@ interface HistoryCallback {
 
     fun onItemClicked(item: HistoryEntity)
 
+    fun onResetCellClicked()
+
+    fun onResetAfterDateClicked()
 }
